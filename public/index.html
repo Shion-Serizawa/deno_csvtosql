@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <title>SQL変換ツール</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <h1>テキスト変換ツール</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="border p-3 mb-4">
+        <h4>CSVからSQLのINSERT文に変換します。</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <form id="csv-form">
+        <div class="form-group">
+          <label for="inputText">変換前のcsv</label>
+          <textarea class="form-control" id="inputText" rows="5" placeholder="1行目はテーブル名
+2行目はカラム名
+3行目からは挿入データを入力"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="outputText">変換後のSQL文</label>
+          <textarea class="form-control" id="outputText" rows="5" readonly></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">変換</button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+        const form = document.getElementById('csv-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = document.querySelector("#inputText").value;
+            const response = await fetch('/convert', {
+                method: 'POST',
+                body: JSON.stringify({ data: formData })
+            });
+            const word = await response.text();
+            const resultDiv = document.getElementById('outputText');
+            resultDiv.textContent = `${word}`;
+
+        });
+    </script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
